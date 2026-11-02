@@ -7,7 +7,7 @@
 
 ## 文档
 
-- [项目需求](docs/requirements.md)
+- [项目需求：深度网络爬取与事件归因](docs/requirements.md)
 - [Cordis 教程：构建持续并发的抓取 Agent](docs/cordis-tutorial.md)
 
 ## 目标链路
@@ -68,7 +68,7 @@ deepseek-harness 通常“一个插件一个包”。这个骨架按**能力域*
 │       ├── search-deepseek.ts # DeepSeek 搜索 provider
 │       └── tools.ts           # web_search / web_fetch
 ├── docs/
-│   ├── requirements.md        # 项目需求（持续补充）
+│   ├── requirements.md        # 项目需求：深度爬取与事件归因（持续补充）
 │   └── cordis-tutorial.md     # Cordis 教程（案例驱动）
 ├── tests/
 │   ├── fetch-url.spec.ts      # 联网抓取：URL → HTML 文件路径
