@@ -5,6 +5,10 @@
 > **当前状态：骨架。**
 > 只有包边界、服务缝、插件入口和组合配置，**没有具体实现**：LLM 调用、agent 循环、文件读取、网页搜索/抓取都只有契约与 `TODO`。`pnpm mh` 会明确报错。
 
+## 文档
+
+- [Cordis 教程：构建持续并发的抓取 Agent](docs/cordis-tutorial.md)
+
 ## 目标链路
 
 ```
@@ -62,6 +66,8 @@ deepseek-harness 通常“一个插件一个包”。这个骨架按**能力域*
 │       ├── fetch-http.ts      # HTTP 抓取 provider
 │       ├── search-deepseek.ts # DeepSeek 搜索 provider
 │       └── tools.ts           # web_search / web_fetch
+├── docs/
+│   └── cordis-tutorial.md     # Cordis 教程（案例驱动）
 ├── tests/
 │   ├── fetch-url.spec.ts      # 联网抓取：URL → HTML 文件路径
 │   └── output/                # 抓取产物（gitignored）
