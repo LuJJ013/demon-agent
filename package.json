@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "mh": "node --import tsx/esm apps/cli/src/bin.ts",
+    "test:cordis": "node --import tsx --test tests/cordis-llm-websearch.spec.ts",
     "test:fetch": "vitest run tests/fetch-url.spec.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run --passWithNoTests",
@@ -20,6 +21,7 @@
     "lint": "oxlint packages apps tests"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
     "@types/node": "^22.20.1",
     "oxlint": "1.81.0",
     "pnpm": "11.28.5",

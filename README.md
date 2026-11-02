@@ -151,7 +151,7 @@ pnpm install                               # 装到 ./node_modules
 - 与上游的差异只在编排：这里是单个 `noEmit` 程序，不拆 host/client solution，也不生成项目引用
 - 骨架采用源码直连：package `exports` 指向 `src/*.ts`，`tsx` / `vitest` 直接运行；启动方式与上游一致为 `node --import tsx/esm`
 - 打包（`lib/` + 类型产物）和 profile 解析留到后续阶段
-- 测试统一用 `*.spec.ts` 命名；离线的放 `packages/*/tests/`，联网或手动运行的一次性验证放根目录 `tests/`，靠环境变量开关而不是无命名约定来区分
+- 测试统一用 `*.spec.ts` 命名；包内离线单测放 `packages/*/tests/`，跨包集成测试和联网/手动验证放根目录 `tests/`，靠命名和环境变量开关区分
 
 ## 命令
 
@@ -163,8 +163,11 @@ pnpm typecheck
 pnpm test
 pnpm lint
 pnpm mh --help   # 骨架阶段预期失败：argument parsing is not implemented yet
+pnpm test:cordis # Cordis 最小集成测试：LLM 请求 + web_search，本地 HTTP stub
 FETCH_URL=https://example.com pnpm test:fetch   # 抓取并打印生成的 HTML 路径
 ```
+
+`cordis-llm-websearch.spec.ts` 用 node:test 和本地 HTTP stub 验证 Cordis 的 Service、inject、事件与生命周期；不联网、不需要 API key。它验证的是 Cordis 编排，不会访问真实 DeepSeek 或搜索 API。
 
 `fetch-url.spec.ts` 从 `FETCH_URL` 读取输入，普通 `pnpm test` 在未设置时自动 skip，不会联网。HTML 写到 `tests/output/<host>-<path>.html`，路径会打印在测试输出里；非 2xx 或非 HTML 内容会让测试失败。也可以直接 `FETCH_URL=... pnpm vitest run tests/fetch-url.spec.ts` 只跑这一个文件。
 
