@@ -1,0 +1,30 @@
+{
+  "name": "@micro-harness/cli",
+  "description": "mh: command-line entry for the micro-harness",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "mh": "./src/bin.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "types": "./src/index.ts",
+  "files": [
+    "src",
+    "cordis.patch.yml"
+  ],
+  "dependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@deepseek-ai/cordis-plugin-include": "~1.0.10",
+    "@deepseek-ai/cordis-plugin-loader": "~1.0.6",
+    "@deepseek-ai/cordis-plugin-timer": "~1.1.7",
+    "@micro-harness/core": "workspace:*",
+    "@micro-harness/fs": "workspace:*",
+    "@micro-harness/llm-deepseek": "workspace:*",
+    "@micro-harness/web": "workspace:*"
+  }
+}

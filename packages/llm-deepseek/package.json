@@ -1,0 +1,23 @@
+{
+  "name": "@micro-harness/llm-deepseek",
+  "description": "DeepSeek adapter for the micro-harness LLM seam",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@micro-harness/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@micro-harness/core": "workspace:*"
+  }
+}

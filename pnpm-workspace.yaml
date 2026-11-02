@@ -1,0 +1,20 @@
+packages:
+  - packages/*
+  - apps/*
+
+# pnpm blocks install scripts unless they are explicitly reviewed here. esbuild
+# ships the native binary used by vitest; it is the only build script in this
+# skeleton.
+allowBuilds:
+  esbuild: true
+
+# Cordis services are singletons per app. Peers are installed automatically so
+# every workspace package resolves the same cordis instance.
+autoInstallPeers: true
+
+# Link @micro-harness/* from the workspace instead of the registry.
+linkWorkspacePackages: true
+
+# Keep the content-addressable store inside the project-local .local toolchain.
+storeDir: .local/pnpm-store
+confirmModulesPurge: false

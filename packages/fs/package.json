@@ -1,0 +1,25 @@
+{
+  "name": "@micro-harness/fs",
+  "description": "Filesystem seam, local provider, and read_file tool",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./local": "./src/local.ts",
+    "./read-tool": "./src/read-tool.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@micro-harness/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@micro-harness/core": "workspace:*"
+  }
+}

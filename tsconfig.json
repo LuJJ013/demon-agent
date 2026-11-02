@@ -1,0 +1,64 @@
+{
+  // Single-program skeleton. The compiler options mirror upstream
+  // tsconfig.base.json; emit/project-reference orchestration is deliberately
+  // left out because this repository typechecks source and does not build yet.
+  "compilerOptions": {
+    "target": "es2024",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "composite": true,
+    "incremental": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": false,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "types": [
+      "node"
+    ],
+    "noEmit": true,
+    "paths": {
+      "@micro-harness/core": [
+        "./packages/core/src/index.ts"
+      ],
+      "@micro-harness/core/*": [
+        "./packages/core/src/*.ts"
+      ],
+      "@micro-harness/llm-deepseek": [
+        "./packages/llm-deepseek/src/index.ts"
+      ],
+      "@micro-harness/fs": [
+        "./packages/fs/src/index.ts"
+      ],
+      "@micro-harness/fs/*": [
+        "./packages/fs/src/*.ts"
+      ],
+      "@micro-harness/web": [
+        "./packages/web/src/index.ts"
+      ],
+      "@micro-harness/web/*": [
+        "./packages/web/src/*.ts"
+      ],
+      "@micro-harness/cli": [
+        "./apps/cli/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/tests/**/*.ts",
+    "apps/*/src/**/*.ts",
+    "apps/*/tests/**/*.ts",
+    "tests/**/*.ts"
+  ]
+}

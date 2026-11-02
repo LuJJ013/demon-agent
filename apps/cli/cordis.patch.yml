@@ -1,0 +1,89 @@
+# Minimal micro-harness tree owned by the CLI app.
+#
+# Standalone: this insert is the complete root entry list. A user profile or
+# `--patch` layer can be applied above it later. Keep composition here, never in
+# TypeScript.
+#
+# Rows are addressed by `id`; a later layer replaces the whole `config` of the
+# row it targets. `!!js` is only allowed under a plugin `config` or an entry
+# `disabled`, matching upstream's loader rules.
+#
+# Every plugin is a skeleton. Mounting the tree will not produce a working agent
+# until the roadmap in README.md is implemented.
+#
+# `fs` is an abstract seam and is intentionally NOT a row: `@micro-harness/fs/local`
+# extends it and registers `ctx.fs` itself. Mounting both would register twice.
+
+- insert:
+    - id: timer
+      name: '@deepseek-ai/cordis-plugin-timer'
+
+    # ── model + session kernel ────────────────────────────────────────────────
+    - id: llm
+      name: '@micro-harness/core/llm'
+
+    - id: llm-deepseek
+      name: '@micro-harness/llm-deepseek'
+      config:
+        apiKeyEnv: DEEPSEEK_API_KEY
+        baseURL: https://api.deepseek.com
+        defaultModel: deepseek-chat
+
+    - id: session
+      name: '@micro-harness/core/session'
+
+    - id: system-prompt
+      name: '@micro-harness/core/system-prompt'
+      config:
+        personaPrefix: ''
+
+    - id: tools
+      name: '@micro-harness/core/tools'
+
+    - id: tool-executor-native
+      name: '@micro-harness/core/executor-native'
+
+    - id: agent
+      name: '@micro-harness/core/agent'
+
+    - id: agent-loop
+      name: '@micro-harness/core/agent-loop'
+      config:
+        agents: []
+
+    # ── filesystem + read_file ────────────────────────────────────────────────
+    - id: filesystem
+      name: '@micro-harness/fs/local'
+      config:
+        cwd: !!js process.cwd()
+
+    - id: tool-fs
+      name: '@micro-harness/fs/read-tool'
+      config:
+        read: true
+
+    # ── web + providers + tools ───────────────────────────────────────────────
+    - id: web
+      name: '@micro-harness/web'
+      config:
+        searchProvider: deepseek-official
+        fetchProvider: http
+
+    - id: web-fetch-http
+      name: '@micro-harness/web/fetch-http'
+      config:
+        maxResponseBytes: 5242880
+        maxBodyChars: 100000
+        timeoutMs: 30000
+        maxRedirects: 5
+
+    - id: web-search-deepseek
+      name: '@micro-harness/web/search-deepseek'
+      config:
+        apiKeyEnv: DEEPSEEK_API_KEY
+
+    - id: tool-web
+      name: '@micro-harness/web/tools'
+      config:
+        fetch: true
+        searchTimeoutMs: 60000

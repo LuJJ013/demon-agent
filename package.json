@@ -1,0 +1,30 @@
+{
+  "name": "@micro-harness/root",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.28.5",
+  "engines": {
+    "node": ">=24.9.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "mh": "node --import tsx/esm apps/cli/src/bin.ts",
+    "test:fetch": "vitest run tests/fetch-url.spec.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "lint": "oxlint packages apps tests"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "oxlint": "1.81.0",
+    "pnpm": "11.28.5",
+    "tsx": "^4.23.13",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
+  }
+}

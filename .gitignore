@@ -1,0 +1,11 @@
+node_modules/
+.local/
+tests/output/
+lib/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+*.log
+.DS_Store

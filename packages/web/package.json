@@ -1,0 +1,26 @@
+{
+  "name": "@micro-harness/web",
+  "description": "Web seam, HTTP/DeepSeek providers, and web tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fetch-http": "./src/fetch-http.ts",
+    "./search-deepseek": "./src/search-deepseek.ts",
+    "./tools": "./src/tools.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@micro-harness/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@micro-harness/core": "workspace:*"
+  }
+}

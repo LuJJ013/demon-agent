@@ -1,0 +1,28 @@
+{
+  "name": "@micro-harness/core",
+  "description": "Cordis service seams and the minimal agent loop",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./llm": "./src/llm.ts",
+    "./session": "./src/session.ts",
+    "./system-prompt": "./src/system-prompt.ts",
+    "./tools": "./src/tools.ts",
+    "./agent": "./src/agent.ts",
+    "./agent-loop": "./src/agent-loop.ts",
+    "./executor-native": "./src/executor-native.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5"
+  }
+}
