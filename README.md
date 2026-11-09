@@ -9,6 +9,7 @@
 
 - [项目需求：深度网络爬取与事件归因](docs/requirements.md)
 - [Cordis 教程：构建持续并发的抓取 Agent](docs/cordis-tutorial.md)
+- [Web 工具设计：web_search 与 web_fetch](docs/web-tools.md)
 
 ## 目标链路
 
