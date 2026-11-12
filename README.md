@@ -2,14 +2,14 @@
 
 参考 [deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) 的 Cordis 插件架构搭建的最小 agent harness 骨架。
 
-> **当前状态：骨架。**
-> 只有包边界、服务缝、插件入口和组合配置，**没有具体实现**：LLM 调用、agent 循环、文件读取、网页搜索/抓取都只有契约与 `TODO`。`pnpm mh` 会明确报错。
+> **当前状态：骨架 + `web_search` 最小切片。**
+> 包边界、服务缝、插件入口和组合配置仍是骨架：LLM 调用、agent 循环、文件读取、`web_fetch` 都只有契约与 `TODO`。`web_search` 已实现 **Exa 主搜索 + DeepSeek 备用** 的顺序回退路由，可通过 `mh web-search` 直连；模型驱动的工具调用仍待 P2。
 
 ## 文档
 
 - [项目需求：深度网络爬取与事件归因](docs/requirements.md)
 - [Cordis 教程：构建持续并发的抓取 Agent](docs/cordis-tutorial.md)
-- [Web 工具设计：web_search 与 web_fetch](docs/web-tools.md)
+- [Web 工具设计：搜索、抓取、正文抽取与多子代理深度采集](docs/web-tools.md)
 
 ## 目标链路
 
@@ -64,15 +64,22 @@ deepseek-harness 通常“一个插件一个包”。这个骨架按**能力域*
 │   │   ├── local.ts           # 本地 provider
 │   │   └── read-tool.ts       # read_file
 │   └── web/src/
-│       ├── index.ts           # ctx.web + provider 契约
-│       ├── fetch-http.ts      # HTTP 抓取 provider
-│       ├── search-deepseek.ts # DeepSeek 搜索 provider
-│       └── tools.ts           # web_search / web_fetch
+│       ├── index.ts           # ctx.web 注册/选择 + WebError
+│       ├── fetch-http.ts      # HTTP 抓取 provider（骨架）
+│       ├── provider-http.ts   # provider 共享的 HTTP 读取/错误解析
+│       ├── search-exa.ts      # Exa Search API provider（主）
+│       ├── search-deepseek.ts # DeepSeek 官方 Search API provider（备）
+│       ├── web-search/        # web_search 工具定义与渲染
+│       └── tools.ts           # web_search / web_fetch 插件入口
 ├── docs/
 │   ├── requirements.md        # 项目需求：深度爬取与事件归因（持续补充）
 │   └── cordis-tutorial.md     # Cordis 教程（案例驱动）
 ├── tests/
 │   ├── fetch-url.spec.ts      # 联网抓取：URL → HTML 文件路径
+│   ├── web-search.spec.ts     # web_search 离线测试（本地 stub）
+│   ├── web-search-exa.spec.ts # Exa provider 离线测试（本地 stub）
+│   ├── web-search-router.spec.ts # 主/备搜索回退路由测试
+│   ├── support/search-stub.ts # 手动 CLI 用的本地搜索 stub
 │   └── output/                # 抓取产物（gitignored）
 ├── .local/                    # 项目内 Node + pnpm + 两个缓存（gitignored）
 ├── package.json
@@ -110,7 +117,7 @@ pnpm install                               # 装到 ./node_modules
 | `ctx.agents` | `core/agent.ts` | `core/agent-loop`（factory） |
 | `ctx.agentLoop` | `core/agent-loop.ts` | CLI |
 | `ctx.fs` | `fs/index.ts` | `fs/local`（provider）、`fs/read-tool`（consumer） |
-| `ctx.web` | `web/index.ts` | `web/fetch-http`、`web/search-deepseek`（provider）、`web/tools`（consumer） |
+| `ctx.web` | `web/index.ts` | `web/fetch-http`、`web/search-exa`、`web/search-deepseek`（provider）、`web/tools`（consumer） |
 
 规则：
 
@@ -165,10 +172,25 @@ pnpm install
 pnpm typecheck
 pnpm test
 pnpm lint
-pnpm mh --help   # 骨架阶段预期失败：argument parsing is not implemented yet
+pnpm mh --help
 pnpm test:cordis # Cordis 最小集成测试：LLM 请求 + web_search，本地 HTTP stub
 FETCH_URL=https://example.com pnpm test:fetch   # 抓取并打印生成的 HTML 路径
+
+# web_search：Exa 主搜索 + DeepSeek 回退（默认路由）
+EXA_API_KEY=exa-... DEEPSEEK_API_KEY=sk-... pnpm mh web-search "DeepSeek V4" --max-results 5
+
+# 只用 DeepSeek（例如没有 Exa key，或临时排查）
+WEB_SEARCH_PRIMARY=deepseek-official WEB_SEARCH_FALLBACK= \
+  DEEPSEEK_API_KEY=sk-... pnpm mh web-search "cordis 插件"
+
+# web_search：本地 DeepSeek stub，不联网、不需要真实 key
+PORT=8787 node --import tsx tests/support/search-stub.ts
+WEB_SEARCH_BASE_URL=http://127.0.0.1:8787 DEEPSEEK_API_KEY=local \
+  WEB_SEARCH_PRIMARY=deepseek-official WEB_SEARCH_FALLBACK= \
+  pnpm mh web-search "cordis 插件"
 ```
+
+`mh web-search` 直接调用工具定义，用于验证 provider、参数校验、去重与渲染；agent loop 尚未实现，模型还不会自动调用该工具。默认 `EXA_API_KEY` 缺失时 Exa 视为不可用，会直接走 DeepSeek；两者都可用时先 Exa，失败（超时/429/5xx）或返回 0 条再切 DeepSeek。离线测试用 `node --import tsx --test tests/web-search.spec.ts tests/web-search-exa.spec.ts tests/web-search-router.spec.ts` 单独运行。
 
 `cordis-llm-websearch.spec.ts` 用 node:test 和本地 HTTP stub 验证 Cordis 的 Service、inject、事件与生命周期；不联网、不需要 API key。它验证的是 Cordis 编排，不会访问真实 DeepSeek 或搜索 API。
 

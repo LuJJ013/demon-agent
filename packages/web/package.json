@@ -8,7 +8,9 @@
     ".": "./src/index.ts",
     "./fetch-http": "./src/fetch-http.ts",
     "./search-deepseek": "./src/search-deepseek.ts",
+    "./search-exa": "./src/search-exa.ts",
     "./tools": "./src/tools.ts",
+    "./web-search": "./src/web-search/index.ts",
     "./package.json": "./package.json"
   },
   "types": "./src/index.ts",

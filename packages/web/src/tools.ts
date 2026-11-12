@@ -2,7 +2,8 @@
  * Model-facing `web_search` / `web_fetch` tools over `ctx.web`. Owns schemas,
  * descriptions, limits, and rendering; never provider details.
  *
- * Skeleton status: plugin metadata and config only.
+ * Skeleton status: `web_search` is implemented as a standalone definition;
+ * registration waits for `ctx.tools.register()`.
  *
  * @module @micro-harness/web/tools
  */
@@ -11,6 +12,9 @@ import type { Context } from '@deepseek-ai/cordis'
 import type {} from '@micro-harness/core/system-prompt'
 import type {} from '@micro-harness/core/tools'
 import type {} from './index.ts'
+
+export { createWebSearchTool, WebSearchArgsError } from './web-search/index.ts'
+export type { WebSearchArgs, WebSearchValue, WebSearchToolConfig } from './web-search/index.ts'
 
 /** Cordis plugin name used by loader diagnostics. */
 export const name = 'tool-web'
@@ -26,16 +30,14 @@ export interface Config {
   readonly fetch?: boolean
   /** Upper bound on sources returned by one search. */
   readonly searchMaxResults?: number
-  /** Upper bound on distinct provider queries per search call. */
-  readonly searchMaxQueries?: number
-  /** Cap on the provider's synthesized answer, in characters. */
-  readonly searchSummaryMaxChars?: number
   /** Cooperative timeout budget per search call, in milliseconds. */
   readonly searchTimeoutMs?: number
   /** Cooperative timeout budget per fetch call, in milliseconds. */
   readonly fetchTimeoutMs?: number
   /** Cap on fetched output returned to the model, in characters. */
   readonly fetchMaxOutputChars?: number
+  /** Fetched-body rendering mode. Defaults to `text`. */
+  readonly fetchFormat?: 'text' | 'html'
 }
 
 /**
@@ -46,5 +48,6 @@ export interface Config {
 export function apply(ctx: Context, config: Config = {}): void {
   void ctx
   void config
-  // TODO(skeleton): register web_search and web_fetch via ctx.tools.register().
+  // TODO(skeleton): ctx.tools.register(createWebSearchTool({ provider: ctx.web, ... }))
+  // after `ctx.tools` exposes registration and `ctx.web` exposes the selected provider.
 }

@@ -66,7 +66,10 @@
     - id: web
       name: '@micro-harness/web'
       config:
-        searchProvider: deepseek-official
+        searchProvider: exa
+        searchFallback:
+          - deepseek-official
+        searchFallbackOnEmpty: true
         fetchProvider: http
 
     - id: web-fetch-http
@@ -77,13 +80,32 @@
         timeoutMs: 30000
         maxRedirects: 5
 
+    - id: web-search-exa
+      name: '@micro-harness/web/search-exa'
+      config:
+        apiKeyEnv: EXA_API_KEY
+        baseURL: https://api.exa.ai
+        type: auto
+        numResults: 10
+        highlights: true
+        highlightsMaxCharacters: 400
+        timeoutMs: 30000
+        maxResponseBytes: 1048576
+
     - id: web-search-deepseek
       name: '@micro-harness/web/search-deepseek'
       config:
         apiKeyEnv: DEEPSEEK_API_KEY
+        baseURL: https://api.deepseek.com
+        count: 10
+        needContent: false
+        timeoutMs: 30000
+        maxResponseBytes: 1048576
 
     - id: tool-web
       name: '@micro-harness/web/tools'
       config:
+        search: true
         fetch: true
+        searchMaxResults: 8
         searchTimeoutMs: 60000
